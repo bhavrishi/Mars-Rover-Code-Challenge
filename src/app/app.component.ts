@@ -26,7 +26,7 @@ export class AppComponent {
       x: 0, y: 0
     };
 
-    this.status = 'Ok';
+    this.status = 'OK';
     this.directions = ['N', 'E', 'S', 'W'];
   }
 
@@ -69,7 +69,7 @@ export class AppComponent {
       }
 
       console.log('Moved location ' + this.xyLocation.x + ' ' + this.xyLocation.y);
-      this.resetLocation();
+     this.resetLocation();
       //this.commandsArray = commands;
 
     }
@@ -126,20 +126,20 @@ export class AppComponent {
 
   isValidLocation(newLocation) {
     console.log('valid location' + newLocation[0]);
-    if (newLocation[0] > 100 || newLocation[0] < 0) {
-      if (newLocation[0] > 100) {
-        newLocation[0] -= 100;
+    if (newLocation[0] >= 100 || newLocation[0] < 0) {
+      if (newLocation[0] >= 100) {
+        newLocation[0] =0;
       }
       else if (newLocation[0] < 0) {
-        newLocation[0] += 100;
+        newLocation[0] = 99;
       }
     }
-    if (newLocation[1] > 100 || newLocation[1] < 0) {
-      if (newLocation[1] > 100) {
-        newLocation[1] -= 100;
+    if (newLocation[1] >= 100 || newLocation[1] < 0) {
+      if (newLocation[1] >= 100) {
+        newLocation[1] = 0;
       }
       else if (newLocation[1] < 0) {
-        newLocation[1] += 100;
+        newLocation[1]=99;
       }
     }
 
