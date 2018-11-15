@@ -3,3 +3,6 @@
 <input type="text" class="txt" #roverY placeholder="Start y">
 <input type="text" class="txt" #roverDirection placeholder="Direction">
 <input type="submit" class="btn"  (click)="processInput(item.value,roverX.value,roverY.value,roverDirection.value)">
+<h1>Rover moved to: </h1>
+<h2>{{outputPosition[0]}}, {{outputPosition[1]}}</h2>
+<p *ngIf="status"> reporting status {{status}}</p>
