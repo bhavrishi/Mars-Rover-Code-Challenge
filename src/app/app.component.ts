@@ -25,17 +25,13 @@ export class AppComponent {
     this.xyLocation = {
       x: 0, y: 0
     };
-
     this.status = 'OK';
     this.directions = ['N', 'E', 'S', 'W'];
   }
 
   processInput(commands: any, roverX: any, roverY: any, roverDirection: string) {
-    console.log(commands);
-    console.log(roverY);
-    console.log(roverY);
-    console.log(roverDirection);
-    if (event === undefined) {
+
+    if (commands === undefined) {
       console.log('Improper input');
       return this.commandList;
     }
@@ -46,43 +42,40 @@ export class AppComponent {
     }
     if (roverDirection === null || roverDirection === undefined || roverDirection === '') {
       this.direction = 'N';
-
     }
+
     else {
-
-
-      this.direction = roverDirection;
+      if (!(roverDirection.toUpperCase() === 'W' || roverDirection === 'S' || roverDirection === 'E' || roverDirection === 'N')) {
+        console.log('Wrong firec');
+        this.direction = 'N';
+      }
+      else {
+        this.direction = roverDirection.toUpperCase();
+      }
       this.xyLocation = {
         x: roverX, y: roverY
       };
     }
     this.commandList = commands;
-    console.log('direction' + this.direction);
-    console.log(this.commandList);
     for (var index = 0; index < this.commandList.length; index++) {
-      var command = this.commandList[index];
-      console.log(command);
+      var command = this.commandList[index].toLowerCase();
       if (command === 'f' || command === 'b') {
         if (!this.goForwardorBackward(command)) break;
       } else if (command === 'l' || command === 'r') {
         this.goLeftorRight(command);
       }
-
+      else {
+        return 'Improper Input';
+      }
       console.log('Moved location ' + this.xyLocation.x + ' ' + this.xyLocation.y);
-     this.resetLocation();
-      //this.commandsArray = commands;
-
+      this.resetLocation();
     }
-
   }
 
   obstacleHandler(newLocation) {
     for (var index = 0; index < this.obstacleList.length; index++) {
-      console.log('New location tostring' + newLocation.toString());
-      console.log('Obstacle tostring' + this.obstacleList[index].toString());
       if ((newLocation[0] == this.obstacleList[index].x) && (newLocation[1] == this.obstacleList[index].y)) {
         this.status = 'obstacle';
-        console.log(this.status);
         return true;
       }
     }
@@ -90,45 +83,36 @@ export class AppComponent {
   }
 
   goForwardorBackward(command) {
-    var xIncrease = 0, yIncrease = 0;
+    var xPosInc = 0, yPosInc = 0;
     if (this.direction === 'N') {
-      yIncrease = 1;
+      yPosInc = 1;
     } else if (this.direction === 'E') { // East
-      xIncrease = 1;
+      xPosInc = 1;
     } else if (this.direction === 'S') { // South
-      yIncrease = -1;
+      yPosInc = -1;
     } else if (this.direction === 'W') { // West
-      xIncrease = -1;
+      xPosInc = -1;
     }
     if (command === 'b') { // Backward
-      xIncrease *= -1;
-      yIncrease *= -1;
+      xPosInc *= -1;
+      yPosInc *= -1;
     }
-    var newLocation = [+this.xyLocation.x + +xIncrease, +this.xyLocation.y + +yIncrease];
-    // if (isObstacle(newLocation)) {
-    //   return false;
-    // }
-    console.log('old' + newLocation);
+    var newLocation = [+this.xyLocation.x + +xPosInc, +this.xyLocation.y + +yPosInc];
     newLocation = this.isValidLocation(newLocation);
     if (this.obstacleHandler(newLocation)) {
-      console.log('obstacle location' + this.xyLocation);
       return true;
     }
     this.xyLocation = {
       x: newLocation[0], y: newLocation[1]
     };
-
-    console.log('New' + this.xyLocation);
     return true;
-
-    //return false;
   }
 
   isValidLocation(newLocation) {
     console.log('valid location' + newLocation[0]);
     if (newLocation[0] >= 100 || newLocation[0] < 0) {
       if (newLocation[0] >= 100) {
-        newLocation[0] =0;
+        newLocation[0] = 0;
       }
       else if (newLocation[0] < 0) {
         newLocation[0] = 99;
@@ -139,24 +123,20 @@ export class AppComponent {
         newLocation[1] = 0;
       }
       else if (newLocation[1] < 0) {
-        newLocation[1]=99;
+        newLocation[1] = 99;
       }
     }
-
     return newLocation;
   }
 
   resetLocation() {
     this.xyLocation = {
-      x: (this.xyLocation.x + this.grid[0]) % this.grid[0], y: (this.xyLocation.y + this.grid[0]) % this.grid[0]
+      x: (this.xyLocation.x + this.grid[0]) % this.grid[0], y: (this.xyLocation.y + this.grid[1]) % this.grid[1]
     };
-
-
   }
 
   goLeftorRight(command) {
     var directionNumber = this.directionAsNumber(this.direction);
-    console.log('Direction no' + directionNumber);
     if (command === 'l') { // Left
       directionNumber = (directionNumber + 4 - 1) % 4;
     } else { // Right
@@ -164,7 +144,6 @@ export class AppComponent {
     }
     this.direction = this.directions[directionNumber];
   }
-
 
   directionAsNumber(direction) {
     for (var index = 0; index < 4; index++) {

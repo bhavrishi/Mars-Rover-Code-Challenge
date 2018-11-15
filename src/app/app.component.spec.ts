@@ -21,11 +21,11 @@ describe('AppComponent', () => {
 describe('You are given the initial starting point (x,y) of a rover and the direction (N,S,E,W) it is facing', function () {
   // it('should set starting location', function () {
   //   var mr = new AppComponent();
-  //   expect(mr.xyLocation).toEqual([0, 0]);
+  //   expect(mr.xyLocation.x).toEqual(0); expect(mr.xyLocation.y).toEqual(0);
   // });
   // it('should use default starting location value 0x0 when not assigned', function () {
   //   var mr = new AppComponent();
-  //   expect(mr.xyLocation).toEqual([0, 0]);
+  //   expect(mr.xyLocation.x).toEqual(0); expect(mr.xyLocation.y).toEqual(0);
   // });
   it('should set direction as numeric value', function () {
     var mr = new AppComponent();
@@ -164,21 +164,17 @@ describe('Implement obstacle detection before each move to a new square.'
   });
 });
 
+
+
 describe('Implement wrapping from one edge of the grid to another (planets are spheres after all)', function() {
-  // it('should assign grid size', function() {
-  //   var mr = new MarsRover([12, 21], 'N', [12, 33]);
-  //   expect(mr.grid).toEqual([12, 33]);
-  // });
-  // it('should use default value 100x100 when grid is not assigned', function() {
-  //   var mr = new MarsRover([12, 21], 'N');
-  //   expect(mr.grid).toEqual([100, 100]);
-  // });
+
   it('should return X to 0 when grid is passed', function () {
     var mr = new AppComponent();
     mr.processInput('f', 99, 99, 'E');
     expect(mr.xyLocation.x).toEqual(0);
     expect(mr.xyLocation.y).toEqual(99);
   });
+
   it('should return Y to 0 when grid is passed', function () {
     var mr = new AppComponent();
     mr.processInput('f', 99, 99, 'N');
@@ -199,4 +195,10 @@ describe('Implement wrapping from one edge of the grid to another (planets are s
     expect(mr.xyLocation.x).toEqual(99);
     expect(mr.xyLocation.y).toEqual(99);
   });
+  it('should use default value 100x100 when grid is not assigned', function() {
+    var mr = new AppComponent();
+    mr.processInput('fflff', 0, 0, 'N');
+    expect(mr.grid).toEqual([100, 100]);
+  });
 });
+
