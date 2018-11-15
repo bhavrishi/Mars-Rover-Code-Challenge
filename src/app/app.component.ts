@@ -1,4 +1,5 @@
 import {Component} from '@angular/core';
+import {Coordinate} from './Model/Coordinate';
 
 @Component({
   selector: 'app-root',
@@ -7,47 +8,85 @@ import {Component} from '@angular/core';
 })
 export class AppComponent {
   commandList: string;
-  xyLocation: any[];
+  xyLocation: Coordinate;
   grid: any[];
   direction: string;
   directions: any[];
-  obstacleList: any[];
+  obstacleList: Coordinate [] = [
+    {x: 2, y: 2},
+    {x: 4, y: 0},
+    {x: 3, y: 3},
+    {x: 4, y: 4},
+  ];
   status: string;
 
   constructor() {
-    this.direction = 'N';
     this.grid = [100, 100];
-    this.xyLocation = [0, 0];
-    this.obstacleList = [];
+    this.xyLocation = {
+      x: 0, y: 0
+    };
+
     this.status = 'Ok';
     this.directions = ['N', 'E', 'S', 'W'];
-
   }
 
-  processInput(event: any) {
-    console.log(event);
+  processInput(commands: any, roverX: any, roverY: any, roverDirection: string) {
+    console.log(commands);
+    console.log(roverY);
+    console.log(roverY);
+    console.log(roverDirection);
     if (event === undefined) {
       console.log('Improper input');
       return this.commandList;
     }
+    if (roverX === undefined || roverY === undefined) {
+      this.xyLocation = {
+        x: 0, y: 0
+      };
+    }
+    if (roverDirection === null || roverDirection === undefined || roverDirection === '') {
+      this.direction = 'N';
+
+    }
     else {
-      this.commandList = event;
-      console.log(this.commandList);
-      for (var index = 0; index < this.commandList.length; index++) {
-        var command = this.commandList[index];
-        console.log(command);
-        if (command === 'f' || command === 'b') {
-          if (!this.goForwardorBackward(command)) break;
-        } else if (command === 'l' || command === 'r') {
-          this.goLeftorRight(command);
-        }
+
+
+      this.direction = roverDirection;
+      this.xyLocation = {
+        x: roverX, y: roverY
+      };
+    }
+    this.commandList = commands;
+    console.log('direction' + this.direction);
+    console.log(this.commandList);
+    for (var index = 0; index < this.commandList.length; index++) {
+      var command = this.commandList[index];
+      console.log(command);
+      if (command === 'f' || command === 'b') {
+        if (!this.goForwardorBackward(command)) break;
+      } else if (command === 'l' || command === 'r') {
+        this.goLeftorRight(command);
       }
-      console.log('Moved location' + this.xyLocation);
+
+      console.log('Moved location ' + this.xyLocation.x + ' ' + this.xyLocation.y);
       this.resetLocation();
       //this.commandsArray = commands;
 
     }
 
+  }
+
+  obstacleHandler(newLocation) {
+    for (var index = 0; index < this.obstacleList.length; index++) {
+      console.log('New location tostring' + newLocation.toString());
+      console.log('Obstacle tostring' + this.obstacleList[index].toString());
+      if ((newLocation[0] == this.obstacleList[index].x) && (newLocation[1] == this.obstacleList[index].y)) {
+        this.status = 'obstacle';
+        console.log(this.status);
+        return true;
+      }
+    }
+    return false;
   }
 
   goForwardorBackward(command) {
@@ -65,13 +104,20 @@ export class AppComponent {
       xIncrease *= -1;
       yIncrease *= -1;
     }
-    var newLocation = [this.xyLocation[0] + xIncrease, this.xyLocation[1] + yIncrease];
+    var newLocation = [+this.xyLocation.x + +xIncrease, +this.xyLocation.y + +yIncrease];
     // if (isObstacle(newLocation)) {
     //   return false;
     // }
     console.log('old' + newLocation);
     newLocation = this.isValidLocation(newLocation);
-    this.xyLocation = newLocation;
+    if (this.obstacleHandler(newLocation)) {
+      console.log('obstacle location' + this.xyLocation);
+      return true;
+    }
+    this.xyLocation = {
+      x: newLocation[0], y: newLocation[1]
+    };
+
     console.log('New' + this.xyLocation);
     return true;
 
@@ -101,10 +147,11 @@ export class AppComponent {
   }
 
   resetLocation() {
-    this.xyLocation = [
-      (this.xyLocation[0] + this.grid[0]) % this.grid[0],
-      (this.xyLocation[1] + this.grid[1]) % this.grid[1]
-    ];
+    this.xyLocation = {
+      x: (this.xyLocation.x + this.grid[0]) % this.grid[0], y: (this.xyLocation.y + this.grid[0]) % this.grid[0]
+    };
+
+
   }
 
   goLeftorRight(command) {

@@ -1,2 +1,5 @@
 <input type="text" class="txt" #item placeholder="Enter Commands for Rover..">
-<input type="submit" class="btn"  (click)="processInput(item.value)">
+<input type="text" class="txt" #roverX placeholder="Start x">
+<input type="text" class="txt" #roverY placeholder="Start y">
+<input type="text" class="txt" #roverDirection placeholder="Direction">
+<input type="submit" class="btn"  (click)="processInput(item.value,roverX.value,roverY.value,roverDirection.value)">
